@@ -5,16 +5,25 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world"
-        android:id="@+id/textInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <Button
-        android:layout_width="fill_parent"
+
+    <ImageButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/speakBtn"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="95dp" />
+        android:src="@drawable/ic_microphone"
+        android:adjustViewBounds="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="111dp" />
+
+    <TextView android:text="@string/IntroText"
+        android:id="@+id/textInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/speakBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="89dp" />
 
 </RelativeLayout>

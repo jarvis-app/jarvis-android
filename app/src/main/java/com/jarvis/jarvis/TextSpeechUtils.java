@@ -31,6 +31,7 @@ public class TextSpeechUtils {
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
                     Locale locale = Locale.getDefault();
+                    //speaker.setLanguage(new Locale("hin", "IND"));
                     speaker.setLanguage(new Locale("hin", "IND"));
                 }
             }
@@ -42,6 +43,7 @@ public class TextSpeechUtils {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
         speechRecognizer.startListening(intent);
 
@@ -59,6 +61,19 @@ public class TextSpeechUtils {
 
         public void onPartialResults(Bundle partialResults) {
             Log.d(TAG, "onPartialResults");
+            String str = new String();
+            Log.d(TAG, "onResults " + partialResults);
+            ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            for (int i = 0; i < data.size(); i++) {
+                Log.d(TAG, "results: " + data.get(i));
+                str += data.get(i);
+                break;
+            }
+            if(mCallback != null)
+            {
+                mCallback.onPartialSpeech(str);
+            }
+
         }
 
         public void onEvent(int eventType, Bundle params) {
@@ -67,6 +82,7 @@ public class TextSpeechUtils {
 
         public void onBeginningOfSpeech() {
             Log.d(TAG, "onBeginningOfSpeech");
+            mCallback.onSpeechStart();
         }
 
         public void onRmsChanged(float rmsdB) {
@@ -105,5 +121,7 @@ public class TextSpeechUtils {
 
     public interface TextSpeechUtilsCallback{
         public void onSpeechInputComplete(String input);
+        public void onPartialSpeech(String input);
+        public void onSpeechStart();
     }
 }
