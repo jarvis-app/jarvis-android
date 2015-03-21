@@ -97,12 +97,27 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 @Override
                 public void onResult(String responseStr) {
                     hideWaitDialog();
-                    textInput.setText(responseStr);
                     speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone));
                     if(responseStr == null || responseStr.isEmpty())
                         showErrorResponse();
-                    else
-                        TextSpeechUtils.speakText(responseStr);
+                    else {
+                        try {
+                            TranslatorUtils.translateToHindi(responseStr, new HttpUtils.Callback() {
+                                @Override
+                                public void onResult(String translatedStr) {
+                                    textInput.setText(translatedStr);
+                                    translatedStr = translatedStr.replace(",","");
+                                    TextSpeechUtils.speakText(translatedStr);
+
+                                }
+                            });
+                        }catch (Exception e)
+                        {
+                            hideWaitDialog();
+                            showErrorResponse();
+                        }
+
+                    }
 
                 }
             });

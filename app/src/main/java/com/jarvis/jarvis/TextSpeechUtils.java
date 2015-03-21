@@ -30,7 +30,7 @@ public class TextSpeechUtils {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    Locale locale = Locale.getDefault();
+                    //Locale locale = Locale.getDefault();
                     //speaker.setLanguage(new Locale("hin", "IND"));
                     speaker.setLanguage(new Locale("hin", "IND"));
                 }
