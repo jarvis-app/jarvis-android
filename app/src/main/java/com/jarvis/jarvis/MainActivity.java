@@ -192,7 +192,24 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     public void showErrorResponse()
     {
-        TextSpeechUtils.speakText("Some error has occurred while processing your request");
+        String msg = "Some error has occurred while processing your request";
+        if(PrefManager.langEnglish(getApplicationContext()))
+            TextSpeechUtils.speakText(msg);
+        else
+        {
+            try {
+                TranslatorUtils.translateToHindi(msg, new HttpUtils.Callback() {
+                    @Override
+                    public void onResult(String translatedMsg) {
+                        TextSpeechUtils.speakText(translatedMsg);
+                    }
+                });
+            }catch (Exception e)
+            {
+
+            }
+
+        }
     }
 
     public void showSettingsDlg()
