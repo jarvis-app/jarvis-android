@@ -15,8 +15,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -42,8 +42,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private TextView textInput;
 
     private static final String TAG = "MainActivity";
-    private ImageButton speakBtn;
+    private ImageView speakBtnIcon;
     private ImageView speakBtnHighlight;
+    private ProgressBar speakBtnLoading;
     private SpeakBtnState speakBtnState = SpeakBtnState.READY;
     ProgressDialog waitDialog;
 
@@ -79,9 +80,12 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         requestQueue = Volley.newRequestQueue(this);
 
-        this.speakBtnHighlight = (ImageView) findViewById(R.id.speakBtnHighlight);
-        this.speakBtn = (ImageButton) findViewById(R.id.speakBtn);
-        speakBtn.setOnClickListener(this);
+        View speakBtn = findViewById(R.id.speakBtn);
+        speakBtnIcon = (ImageView) findViewById(R.id.speakBtnIcon);
+        speakBtnHighlight = (ImageView) findViewById(R.id.speakBtnHighlight);
+        speakBtnLoading = (ProgressBar) findViewById(R.id.speakBtnLoading);
+        speakBtnIcon.setOnClickListener(this);
+        speakBtnLoading.setOnClickListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             speakBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -163,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 @Override
                 public void onResponse(String responseStr) {
                     hideWaitDialog();
-                    speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
+                    speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
                     if (responseStr == null || responseStr.isEmpty())
                         showErrorResponse();
                     else {
@@ -239,6 +243,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 .setDuration(200)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .start();
+        speakBtnIcon.setVisibility(View.VISIBLE);
+        speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
+        speakBtnLoading.setVisibility(View.INVISIBLE);
         textInput.setText(getString(R.string.IntroText));
     }
 
@@ -269,6 +276,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 .setDuration(200)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .start();
+        speakBtnIcon.setVisibility(View.VISIBLE);
+        speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
+        speakBtnLoading.setVisibility(View.INVISIBLE);
         textInput.setText(getString(R.string.listening));
     }
 
@@ -277,6 +287,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             return;
         speakBtnState = SpeakBtnState.WAITING_FOR_RESPONSE;
         Log.d(TAG, speakBtnState.name());
+        speakBtnIcon.setVisibility(View.INVISIBLE);
+        speakBtnLoading.setVisibility(View.VISIBLE);
         try {
             textInput.setText(input);
             TranslatorUtils.translateToEnglish(requestQueue, input,
@@ -297,27 +309,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             return;
         speakBtnState = SpeakBtnState.RELAYING_RESPONSE;
         Log.d(TAG, speakBtnState.name());
+        speakBtnIcon.setVisibility(View.VISIBLE);
+        speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.success));
+        speakBtnLoading.setVisibility(View.INVISIBLE);
         textInput.setText(output);
         output = output.replace(",", "");
         TextSpeechUtils.speakText(output, speechDoneListener);
     }
 
     public void showWaitDialog() {
-        if (this.waitDialog == null) {
-            waitDialog = new ProgressDialog(this);
-            waitDialog.setTitle("Processing...");
-        }
-        this.waitDialog.show();
+//        if (this.waitDialog == null) {
+//            waitDialog = new ProgressDialog(this);
+//            waitDialog.setTitle("Processing...");
+//        }
+//        this.waitDialog.show();
     }
 
     public void hideWaitDialog() {
-        if (this.waitDialog != null && this.waitDialog.isShowing()) {
-            this.waitDialog.hide();
-        }
+//        if (this.waitDialog != null && this.waitDialog.isShowing()) {
+//            this.waitDialog.hide();
+//        }
     }
 
     public void showErrorResponse() {
         hideWaitDialog();
+        speakBtnIcon.setVisibility(View.VISIBLE);
+        speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.failure));
+        speakBtnLoading.setVisibility(View.INVISIBLE);
         String error = "Some error has occurred while processing your request";
         textInput.setText(error);
         TextSpeechUtils.speakText(error, speechDoneListener);

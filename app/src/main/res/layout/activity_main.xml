@@ -15,10 +15,12 @@
         android:clipChildren="false">
 
         <FrameLayout
+            android:id="@+id/speakBtn"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="64dp"
+            android:clickable="true"
             >
 
             <ImageView
@@ -31,18 +33,29 @@
                 />
 
             <ImageButton
-                android:id="@+id/speakBtn"
+                android:id="@+id/speakBtnIcon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="@dimen/padding_huge"
                 android:paddingRight="@dimen/padding_huge"
                 android:paddingTop="@dimen/padding_huge"
-                android:paddingBottom="@dimen/padding_large"
+                android:paddingBottom="@dimen/padding_huge"
                 android:src="@drawable/mic_fg"
                 android:background="@drawable/mic_bg"
                 android:scaleType="fitCenter"
                 android:elevation="20dp"
                 android:contentDescription="@string/IntroText"
+                />
+
+            <ProgressBar
+                android:id="@+id/speakBtnLoading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                android:padding="@dimen/padding_large"
+                android:indeterminate="true"
+                android:background="@drawable/mic_bg"
                 />
 
         </FrameLayout>

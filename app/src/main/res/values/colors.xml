@@ -3,7 +3,8 @@
 
     <color name="primary">#F44336</color>
     <color name="primary_dark">#D32F2F</color>
-    <color name="accent">#607D8B</color>
+    <!--<color name="accent">#607D8B</color>-->
+    <color name="accent">@android:color/white</color>
 
     <!-- text -->
     <color name="text_primary">#212121</color>
