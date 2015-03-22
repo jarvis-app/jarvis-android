@@ -1,5 +1,6 @@
 package com.jarvis.jarvis;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -24,14 +25,18 @@ public class TranslatorUtils {
             return;
         }
 
-        requestQueue.add(new StringRequest(Request.Method.GET,
+        StringRequest req = new StringRequest(Request.Method.GET,
                 HINDI_TO_ENG + URLEncoder.encode(text, "UTF-8"),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String responseStr) {
                         successListener.onResponse(responseStr.split("(?<!\\\\)\"")[1]);
                     }
-                }, errorListener));
+                }, errorListener);
+        req.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(req);
     }
 
     public static void translateToHindi(RequestQueue requestQueue, String text,
@@ -43,14 +48,18 @@ public class TranslatorUtils {
             return;
         }
 
-        requestQueue.add(new StringRequest(Request.Method.GET,
+        StringRequest req = new StringRequest(Request.Method.GET,
                 ENG_TO_HINDI + URLEncoder.encode(text, "UTF-8"),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String responseStr) {
                         successListener.onResponse(responseStr.split("(?<!\\\\)\"")[1]);
                     }
-                }, errorListener));
+                }, errorListener);
+        req.setRetryPolicy(new DefaultRetryPolicy(10000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(req);
     }
 
     public static boolean isEnglish(String input) {

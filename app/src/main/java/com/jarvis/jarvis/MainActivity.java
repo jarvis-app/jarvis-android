@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -187,9 +188,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     }
                 }
             };
-            requestQueue.add(new StringRequest(Request.Method.GET,
+            StringRequest req = new StringRequest(Request.Method.GET,
                     BASE_URL + "/query/" + URLEncoder.encode(input, "UTF-8"),
-                    successListener, errorListener));
+                    successListener, errorListener);
+            req.setRetryPolicy(new DefaultRetryPolicy(10000,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            requestQueue.add(req);
         } catch (Exception e) {
             hideWaitDialog();
             showErrorResponse();
