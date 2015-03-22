@@ -10,34 +10,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
-        android:padding="@dimen/padding_large"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:clipChildren="false">
 
-        <ImageButton
-            android:id="@+id/speakBtn"
+        <FrameLayout
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
-            android:paddingLeft="@dimen/padding_huge"
-            android:paddingRight="@dimen/padding_huge"
-            android:paddingTop="@dimen/padding_huge"
-            android:paddingBottom="@dimen/padding_large"
-            android:layout_margin="@dimen/padding_large"
-            android:src="@drawable/mic_fg"
-            android:background="@drawable/mic_bg"
-            android:scaleType="fitCenter"
-            android:elevation="20dp"
-            android:contentDescription="@string/IntroText"
-            />
+            android:layout_marginTop="64dp"
+            >
+
+            <ImageView
+                android:id="@+id/speakBtnHighlight"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:src="@drawable/mic_bg"
+                android:alpha="0.4"
+                />
+
+            <ImageButton
+                android:id="@+id/speakBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/padding_huge"
+                android:paddingRight="@dimen/padding_huge"
+                android:paddingTop="@dimen/padding_huge"
+                android:paddingBottom="@dimen/padding_large"
+                android:src="@drawable/mic_fg"
+                android:background="@drawable/mic_bg"
+                android:scaleType="fitCenter"
+                android:elevation="20dp"
+                android:contentDescription="@string/IntroText"
+                />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/textInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
             android:gravity="center"
             android:text="@string/IntroText"
             android:textSize="@dimen/text_size_large"

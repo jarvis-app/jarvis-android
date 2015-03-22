@@ -12,7 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -22,12 +24,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     private  final String TAG = "MainActivity";
     private ImageButton speakBtn;
+    private ImageView speakBtnHighlight;
     ProgressDialog waitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.speakBtnHighlight = (ImageView) findViewById(R.id.speakBtnHighlight);
         this.speakBtn = (ImageButton) findViewById(R.id.speakBtn);
         speakBtn.setOnClickListener(this);
 
@@ -112,7 +116,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 @Override
                 public void onResult(String responseStr) {
                     hideWaitDialog();
-                    speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone));
+                    speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
                     if(responseStr == null || responseStr.isEmpty())
                         showErrorResponse();
                     else {
@@ -151,42 +155,42 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        switch (v.getId())
-        {
-            case R.id.speakBtn:
-                    TextSpeechUtils.getVoiceInput(new TextSpeechUtils.TextSpeechUtilsCallback() {
-                        @Override
-                        public void onSpeechStart() {
+        TextSpeechUtils.getVoiceInput(new TextSpeechUtils.TextSpeechUtilsCallback() {
+            @Override
+            public void onSpeechStart() {
 
+            }
+
+            @Override
+            public void onPartialSpeech(String input) {
+                textInput.setText(input);
+            }
+
+            @Override
+            public void onSpeechInputComplete(String input) {
+                try {
+                    textInput.setText(input);
+                    HttpUtils.Callback translatorCallback = new HttpUtils.Callback() {
+                        @Override
+                        public void onResult(String translatedText) {
+                            queryJarvisServer(translatedText);
                         }
-
-                        @Override
-                        public void onPartialSpeech(String input) {
-                            textInput.setText(input);
-                        }
-
-                        @Override
-                        public void onSpeechInputComplete(String input) {
-                            try {
-                                textInput.setText(input);
-                                HttpUtils.Callback translatorCallback = new HttpUtils.Callback() {
-                                    @Override
-                                    public void onResult(String translatedText) {
-                                        queryJarvisServer(translatedText);
-                                    }
-                                };
-                                    TranslatorUtils.translateToEnglish(input, translatorCallback);
-                                }catch (Exception e)
-                                {
-                                    textInput.setText(e.getMessage());
-                                    showErrorResponse();
-                                }
-                            }
-                    });
-                speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_active));
-                break;
-        }
-
+                    };
+                    TranslatorUtils.translateToEnglish(input, translatorCallback);
+                } catch (Exception e) {
+                    textInput.setText(e.getMessage());
+                    showErrorResponse();
+                }
+            }
+        });
+        speakBtnHighlight
+                .animate()
+                .scaleX(1.35f)
+                .scaleY(1.35f)
+                .setDuration(200)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+        textInput.setText("Go on, I'm listening...");
     }
 
     public void showWaitDialog()
