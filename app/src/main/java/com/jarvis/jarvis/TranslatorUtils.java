@@ -1,71 +1,62 @@
 package com.jarvis.jarvis;
 
-/**
- * Created by subhgupt on 21/03/15.
- */
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-public class TranslatorUtils{
 
-    public static void translateToEnglish(String text, final HttpUtils.Callback callback) throws IOException{
-        if(isEnglish(text)) {
-            callback.onResult(text);
+public class TranslatorUtils {
+
+    public static final String HINDI_TO_ENG = "http://translate.google.com/translate_a/t?client=t&hl=en&sl=" +
+            "hi" + "&tl=" + "en" + "&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=";
+    public static final String ENG_TO_HINDI = "http://translate.google.com/translate_a/t?" +
+            "client=t&hl=hi&sl=en&tl=hi&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=";
+
+    public static void translateToEnglish(RequestQueue requestQueue, String text,
+                                          final Response.Listener<String> successListener,
+                                          final Response.ErrorListener errorListener)
+            throws UnsupportedEncodingException {
+        if (isEnglish(text)) {
+            successListener.onResponse(text);
             return;
         }
-        // fetch
-        //http://translate.google.com/translate_a/t?client=t&text='.$word.'&hl=en&sl=hi&tl=en&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1
-        String url = "http://translate.google.com/translate_a/t?client=t&hl=en&sl=" +
-                "hi" + "&tl=" + "en" + "&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=" +
-                URLEncoder.encode(text, "UTF-8");
-        HttpUtils.performGet(url, new HttpUtils.Callback() {
-            @Override
-            public void onResult(String responseStr) {
-                    StringBuilder sb = new StringBuilder();
-                    String[] splits = responseStr.split("(?<!\\\\)\"");
-                    for(int i = 1; i < splits.length; i += 8) {
-                        sb.append(splits[i]);
-                        break;
+
+        requestQueue.add(new StringRequest(Request.Method.GET,
+                HINDI_TO_ENG + URLEncoder.encode(text, "UTF-8"),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String responseStr) {
+                        successListener.onResponse(responseStr.split("(?<!\\\\)\"")[1]);
                     }
-                    responseStr =  sb.toString();
-                    callback.onResult(responseStr);
-
-            }
-        });
-
+                }, errorListener));
     }
 
-    public static void translateToHindi(String text, final HttpUtils.Callback callback) throws IOException{
-        if(!isEnglish(text))
-        {
-            callback.onResult(text);
+    public static void translateToHindi(RequestQueue requestQueue, String text,
+                                        final Response.Listener<String> successListener,
+                                        final Response.ErrorListener errorListener)
+            throws UnsupportedEncodingException {
+        if (!isEnglish(text)) {
+            successListener.onResponse(text);
             return;
         }
-        // fetch
-        //http://translate.google.com/translate_a/t?client=t&text='.$word.'&hl=en&sl=hi&tl=en&ie=UTF-8&oe=UTF-8&multires=1&otf=1&pc=1&trs=1&ssel=3&tsel=6&sc=1
-        String url = "http://translate.google.com/translate_a/t?client=t&hl=hi&sl=en&tl=hi&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=" +
-                URLEncoder.encode(text, "UTF-8");
-        HttpUtils.performGet(url, new HttpUtils.Callback() {
-            @Override
-            public void onResult(String responseStr) {
-                StringBuilder sb = new StringBuilder();
-                String[] splits = responseStr.split("(?<!\\\\)\"");
-                for(int i = 1; i < splits.length; i += 8) {
-                    sb.append(splits[i]);
-                    break;
-                }
-                responseStr =  sb.toString();
-                callback.onResult(responseStr);
 
-            }
-        });
-
+        requestQueue.add(new StringRequest(Request.Method.GET,
+                ENG_TO_HINDI + URLEncoder.encode(text, "UTF-8"),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String responseStr) {
+                        successListener.onResponse(responseStr.split("(?<!\\\\)\"")[1]);
+                    }
+                }, errorListener));
     }
 
-    public static boolean isEnglish(String input){
+    public static boolean isEnglish(String input) {
         boolean isEnglish = true;
-        for ( char c : input.toCharArray() ) {
-            if ( Character.UnicodeBlock.of(c) != Character.UnicodeBlock.BASIC_LATIN ) {
+        for (char c : input.toCharArray()) {
+            if (Character.UnicodeBlock.of(c) != Character.UnicodeBlock.BASIC_LATIN) {
                 isEnglish = false;
                 break;
             }

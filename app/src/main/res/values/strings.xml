@@ -12,5 +12,6 @@
     <string name="InternetNotAvailableMsg">No internet connection available. Do you want to try again?</string>
     <string name="title_activity_preference">PreferenceActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="listening">Go on, I\'m listening...</string>
 
 </resources>

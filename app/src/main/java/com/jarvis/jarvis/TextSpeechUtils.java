@@ -7,9 +7,11 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -22,7 +24,7 @@ public class TextSpeechUtils {
     private static TextSpeechUtilsCallback mCallback;
     private static final String TAG = "TextSpeechUtils";
     private static Context mContext;
-    public static void init(Context context) {
+    public static void init(Context context, final UtteranceProgressListener callback) {
         mContext = context;
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         speechRecognizer.setRecognitionListener(new VoiceInputListener());
@@ -30,6 +32,7 @@ public class TextSpeechUtils {
         speaker = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
+                speaker.setOnUtteranceProgressListener(callback);
                 if (status != TextToSpeech.ERROR) {
                     if(isEng)
                         speaker.setLanguage(Locale.US);
@@ -65,8 +68,10 @@ public class TextSpeechUtils {
 
     }
 
-    public static void speakText(String text) {
-        speaker.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    public static void speakText(String text, UtteranceProgressListener callback) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId");
+        speaker.speak(text, TextToSpeech.QUEUE_FLUSH, params);
     }
 
     static class VoiceInputListener implements RecognitionListener {
