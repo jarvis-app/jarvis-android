@@ -21,7 +21,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private ImageButton speakBtn;
     ProgressDialog waitDialog;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +82,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            showSettingsDlg();
             return true;
         }
 
@@ -102,15 +102,20 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                         showErrorResponse();
                     else {
                         try {
-                            TranslatorUtils.translateToHindi(responseStr, new HttpUtils.Callback() {
+                            HttpUtils.Callback translatorCallback  = new HttpUtils.Callback() {
                                 @Override
                                 public void onResult(String translatedStr) {
                                     textInput.setText(translatedStr);
-                                    translatedStr = translatedStr.replace(",","");
+                                    translatedStr = translatedStr.replace(",", "");
                                     TextSpeechUtils.speakText(translatedStr);
 
                                 }
-                            });
+                            };
+                            if(PrefManager.langEnglish(MainActivity.this.getApplicationContext()))
+                                TranslatorUtils.translateToEnglish(responseStr, translatorCallback);
+                            else
+                                TranslatorUtils.translateToHindi(responseStr, translatorCallback);
+
                         }catch (Exception e)
                         {
                             hideWaitDialog();
@@ -137,7 +142,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     TextSpeechUtils.getVoiceInput(new TextSpeechUtils.TextSpeechUtilsCallback() {
                         @Override
                         public void onSpeechStart() {
-                            speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_active));
+
                         }
 
                         @Override
@@ -148,12 +153,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                         @Override
                         public void onSpeechInputComplete(String input) {
                             try {
-                                    TranslatorUtils.translateToEnglish(input, new HttpUtils.Callback() {
-                                        @Override
-                                        public void onResult(String translatedText) {
-                                            queryJarvisServer(translatedText);
-                                        }
-                                    });
+                                textInput.setText(input);
+                                HttpUtils.Callback translatorCallback = new HttpUtils.Callback() {
+                                    @Override
+                                    public void onResult(String translatedText) {
+                                        queryJarvisServer(translatedText);
+                                    }
+                                };
+                                    TranslatorUtils.translateToEnglish(input, translatorCallback);
                                 }catch (Exception e)
                                 {
                                     textInput.setText(e.getMessage());
@@ -161,7 +168,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                                 }
                             }
                     });
-
+                speakBtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_active));
                 break;
         }
 
@@ -188,4 +195,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         TextSpeechUtils.speakText("Some error has occurred while processing your request");
     }
 
+    public void showSettingsDlg()
+    {
+        Intent intent = new Intent(this, PreferenceActivity.class);
+        startActivity(intent);
+    }
+
+
 }
+
+
+

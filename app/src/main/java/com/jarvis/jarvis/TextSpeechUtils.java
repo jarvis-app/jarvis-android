@@ -21,23 +21,34 @@ public class TextSpeechUtils {
     private static TextToSpeech speaker;
     private static TextSpeechUtilsCallback mCallback;
     private static final String TAG = "TextSpeechUtils";
-
+    private static Context mContext;
     public static void init(Context context) {
+        mContext = context;
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
         speechRecognizer.setRecognitionListener(new VoiceInputListener());
-
+        final boolean isEng = PrefManager.langEnglish(context.getApplicationContext());
         speaker = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if (status != TextToSpeech.ERROR) {
-                    //Locale locale = Locale.getDefault();
-                    //speaker.setLanguage(new Locale("hin", "IND"));
-                    speaker.setLanguage(new Locale("hin", "IND"));
+                    if(isEng)
+                        speaker.setLanguage(Locale.US);
+                    else
+                        speaker.setLanguage(new Locale("hin", "IND"));
                 }
             }
         });
     }
 
+    public static void setSpeakerLanguage(boolean english)
+    {
+        if(speaker != null) {
+            if(english)
+                speaker.setLanguage(Locale.US);
+            else
+                speaker.setLanguage(new Locale("hin", "IND"));
+        }
+    }
     public static void getVoiceInput(TextSpeechUtilsCallback callback) {
         mCallback = callback;
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -45,6 +56,10 @@ public class TextSpeechUtils {
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"voice.recognition.test");
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);
+        if(PrefManager.langEnglish(mContext.getApplicationContext()))
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        else
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "hin-IND");
         speechRecognizer.startListening(intent);
 
 
