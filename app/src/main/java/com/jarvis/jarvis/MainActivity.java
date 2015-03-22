@@ -1,13 +1,16 @@
 package com.jarvis.jarvis;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,6 +30,18 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         this.speakBtn = (ImageButton) findViewById(R.id.speakBtn);
         speakBtn.setOnClickListener(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            speakBtn.setOnTouchListener(new View.OnTouchListener() {
+                @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    v.getBackground().setHotspot(event.getX(), event.getY());
+                    return false;
+                }
+            });
+        }
+
         this.textInput = (TextView) findViewById(R.id.textInput);
         waitDialog = new ProgressDialog(this);
         waitDialog.setTitle("Processing...");

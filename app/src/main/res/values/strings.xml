@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Jarvis</string>
-    <string name="IntroText">Tap and Speak</string>
+    <string name="IntroText">Hey there, I\'m Jarvis! Tap to ask me a question!</string>
     <string name="action_settings">Settings</string>
     <string name="NoInternetTitle">No Internet</string>
     <string name="Yes">Yes</string>

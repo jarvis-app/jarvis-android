@@ -1,29 +1,49 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_huge"
+    tools:context=".MainActivity">
 
-
-
-    <ImageButton
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/speakBtn"
-        android:src="@drawable/ic_microphone"
-        android:adjustViewBounds="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="111dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:padding="@dimen/padding_large"
+        android:orientation="vertical"
+        android:clipChildren="false">
 
-    <TextView android:text="@string/IntroText"
-        android:id="@+id/textInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@+id/speakBtn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp" />
+        <ImageButton
+            android:id="@+id/speakBtn"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="@dimen/padding_huge"
+            android:paddingRight="@dimen/padding_huge"
+            android:paddingTop="@dimen/padding_huge"
+            android:paddingBottom="@dimen/padding_large"
+            android:layout_margin="@dimen/padding_large"
+            android:src="@drawable/mic_fg"
+            android:background="@drawable/mic_bg"
+            android:scaleType="fitCenter"
+            android:elevation="20dp"
+            android:contentDescription="@string/IntroText"
+            />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="@string/IntroText"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/text_primary"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>

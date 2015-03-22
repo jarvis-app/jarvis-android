@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primary">#F44336</color>
+    <color name="primary_dark">#D32F2F</color>
+    <color name="accent">#607D8B</color>
+
+    <!-- text -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#727272</color>
+    <color name="text_primary_inverted">#FFFFFF</color>
+    <color name="text_shadow">#000000</color>
+
+    <!-- misc -->
+    <color name="divider">#B6B6B6</color>
+
+</resources>
