@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     ProgressDialog waitDialog;
 
     private RequestQueue requestQueue;
-    private static final String BASE_URL = "http://192.168.4.102:9393";
+    private static final String BASE_URL = "http://ec2-54-148-225-248.us-west-2.compute.amazonaws.com";
 
     private final Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
