@@ -240,13 +240,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 return true;
             }
         });
-        speakBtnHighlight
-                .animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(200)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
+        shrinkHighlight();
         speakBtnIcon.setVisibility(View.VISIBLE);
         speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
         speakBtnLoading.setVisibility(View.INVISIBLE);
@@ -273,13 +267,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setWaitingForResponseState(input);
             }
         });
-        speakBtnHighlight
-                .animate()
-                .scaleX(1.35f)
-                .scaleY(1.35f)
-                .setDuration(200)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
+        expandHighlight();
         speakBtnIcon.setVisibility(View.VISIBLE);
         speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
         speakBtnLoading.setVisibility(View.INVISIBLE);
@@ -291,6 +279,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             return;
         speakBtnState = SpeakBtnState.WAITING_FOR_RESPONSE;
         Log.d(TAG, speakBtnState.name());
+        shrinkHighlight();
         speakBtnIcon.setVisibility(View.INVISIBLE);
         speakBtnLoading.setVisibility(View.VISIBLE);
         try {
@@ -313,12 +302,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             return;
         speakBtnState = SpeakBtnState.RELAYING_RESPONSE;
         Log.d(TAG, speakBtnState.name());
+        expandHighlight();
         speakBtnIcon.setVisibility(View.VISIBLE);
         speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.success));
         speakBtnLoading.setVisibility(View.INVISIBLE);
         textInput.setText(output);
         output = output.replace(",", "");
         TextSpeechUtils.speakText(output, speechDoneListener);
+    }
+
+    private void expandHighlight() {
+        speakBtnHighlight
+                .animate()
+                .scaleX(1.35f)
+                .scaleY(1.35f)
+                .setDuration(200)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+    }
+
+    private void shrinkHighlight() {
+        speakBtnHighlight
+                .animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(200)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
     }
 
     public void showWaitDialog() {
