@@ -16,6 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/app_name"
             android:textSize="@dimen/text_size_ultralarge"
             android:fontFamily="sans-serif-light"
@@ -37,7 +38,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="50dp"
             android:clickable="true"
             >
 
@@ -54,10 +55,7 @@
                 android:id="@+id/speakBtnIcon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="@dimen/padding_huge"
-                android:paddingRight="@dimen/padding_huge"
-                android:paddingTop="@dimen/padding_huge"
-                android:paddingBottom="@dimen/padding_huge"
+                android:padding="@dimen/padding_huge"
                 android:src="@drawable/mic_fg"
                 android:background="@drawable/mic_bg"
                 android:scaleType="fitCenter"
@@ -83,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="60dp"
             android:gravity="center"
             android:text="@string/IntroText"
             android:textSize="@dimen/text_size_large"

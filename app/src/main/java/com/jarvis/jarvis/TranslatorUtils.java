@@ -8,25 +8,27 @@ import com.android.volley.toolbox.StringRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 public class TranslatorUtils {
 
-    public static final String HINDI_TO_ENG = "http://translate.google.com/translate_a/t?client=t&hl=en&sl=" +
-            "hi" + "&tl=" + "en" + "&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=";
-    public static final String ENG_TO_HINDI = "http://translate.google.com/translate_a/t?" +
-            "client=t&hl=hi&sl=en&tl=hi&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=";
+    public static final String DELOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t" +
+            "&hl=en&sl=%1$s&tl=en&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=%2$s";
+    public static final String LOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t&" +
+            "hl=%1$s&sl=en&tl=%1$s&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=%2$s";
 
-    public static void translateToEnglish(RequestQueue requestQueue, String text,
-                                          final Response.Listener<String> successListener,
-                                          final Response.ErrorListener errorListener)
+    public static void delocalize(RequestQueue requestQueue, String text,
+                                  final Response.Listener<String> successListener,
+                                  final Response.ErrorListener errorListener)
             throws UnsupportedEncodingException {
         if (isEnglish(text)) {
             successListener.onResponse(text);
             return;
         }
 
-        StringRequest req = new StringRequest(Request.Method.GET,
-                HINDI_TO_ENG + URLEncoder.encode(text, "UTF-8"),
+        String url = String.format((Locale) null, DELOCALIZE_URL,
+                Locale.getDefault().getLanguage(), URLEncoder.encode(text, "UTF-8"));
+        StringRequest req = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String responseStr) {
@@ -39,17 +41,18 @@ public class TranslatorUtils {
         requestQueue.add(req);
     }
 
-    public static void translateToHindi(RequestQueue requestQueue, String text,
-                                        final Response.Listener<String> successListener,
-                                        final Response.ErrorListener errorListener)
+    public static void localize(RequestQueue requestQueue, String text,
+                                final Response.Listener<String> successListener,
+                                final Response.ErrorListener errorListener)
             throws UnsupportedEncodingException {
         if (!isEnglish(text)) {
             successListener.onResponse(text);
             return;
         }
 
-        StringRequest req = new StringRequest(Request.Method.GET,
-                ENG_TO_HINDI + URLEncoder.encode(text, "UTF-8"),
+        String url = String.format((Locale) null, LOCALIZE_URL,
+                Locale.getDefault().getLanguage(), URLEncoder.encode(text, "UTF-8"));
+        StringRequest req = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String responseStr) {

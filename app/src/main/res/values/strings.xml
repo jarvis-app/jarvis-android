@@ -7,11 +7,7 @@
     <string name="NoInternetTitle">No Internet</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
-    <string name="English">English</string>
-    <string name="Hindi">हिंदी</string>
     <string name="InternetNotAvailableMsg">No internet connection available. Do you want to try again?</string>
-    <string name="title_activity_preference">PreferenceActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="listening">Go on, I\'m listening...</string>
+    <string name="listening">Go on, I\'m listening…</string>
 
 </resources>

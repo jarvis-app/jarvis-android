@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">जार्विस</string>
+    <string name="IntroText">मैं जार्विस हूँ! बटन दबओ और सवाल पूछो!</string>
+    <string name="action_settings">सेटिंग्स</string>
+    <string name="listening">मैं सुन रहा हूँ…</string>
+</resources>

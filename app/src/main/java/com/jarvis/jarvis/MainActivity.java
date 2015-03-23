@@ -140,27 +140,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            showSettingsDlg();
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -182,12 +169,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                                     setRelayingResponseState(output);
                                 }
                             };
-                            if (PrefManager.langEnglish(MainActivity.this.getApplicationContext()))
-                                TranslatorUtils.translateToEnglish(requestQueue, responseStr,
-                                        translatorCallback, errorListener);
-                            else
-                                TranslatorUtils.translateToHindi(requestQueue, responseStr,
-                                        translatorCallback, errorListener);
+                            TranslatorUtils.localize(requestQueue, responseStr,
+                                    translatorCallback, errorListener);
                         } catch (Exception e) {
                             hideWaitDialog();
                             showErrorResponse();
@@ -244,7 +227,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         speakBtnIcon.setVisibility(View.VISIBLE);
         speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
         speakBtnLoading.setVisibility(View.INVISIBLE);
-        textInput.setText(getString(R.string.IntroText));
     }
 
     private void setListeningState() {
@@ -284,7 +266,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         speakBtnLoading.setVisibility(View.VISIBLE);
         try {
             textInput.setText(input);
-            TranslatorUtils.translateToEnglish(requestQueue, input,
+            TranslatorUtils.delocalize(requestQueue, input,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String translatedText) {
@@ -372,11 +354,5 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
         //     }
     }
-
-    public void showSettingsDlg() {
-        Intent intent = new Intent(this, PreferenceActivity.class);
-        startActivity(intent);
-    }
-
 
 }
