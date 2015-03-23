@@ -2,7 +2,6 @@ package com.jarvis.jarvis;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -47,7 +46,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private ImageView speakBtnHighlight;
     private ProgressBar speakBtnLoading;
     private SpeakBtnState speakBtnState = SpeakBtnState.READY;
-    ProgressDialog waitDialog;
 
     private RequestQueue requestQueue;
     private static final String BASE_URL = "http://ec2-54-148-225-248.us-west-2.compute.amazonaws.com";
@@ -103,8 +101,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
 
         this.textInput = (TextView) findViewById(R.id.textInput);
-        waitDialog = new ProgressDialog(this);
-        waitDialog.setTitle("Processing...");
         if (!HttpUtils.isNetworkAvailable(this)) {
             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                 @Override
@@ -152,12 +148,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void queryJarvisServer(String input) {
-        showWaitDialog();
         try {
             Response.Listener<String> successListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String responseStr) {
-                    hideWaitDialog();
                     speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.mic_fg));
                     if (responseStr == null || responseStr.isEmpty())
                         showErrorResponse();
@@ -172,7 +166,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                             TranslatorUtils.localize(requestQueue, responseStr,
                                     translatorCallback, errorListener);
                         } catch (Exception e) {
-                            hideWaitDialog();
                             showErrorResponse();
                         }
 
@@ -187,7 +180,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             requestQueue.add(req);
         } catch (Exception e) {
-            hideWaitDialog();
             showErrorResponse();
         }
     }
@@ -236,8 +228,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         Log.d(TAG, speakBtnState.name());
         TextSpeechUtils.getVoiceInput(new TextSpeechUtils.TextSpeechUtilsCallback() {
             @Override
-            public void onSpeechStart() {
-            }
+            public void onSpeechStart() { }
 
             @Override
             public void onPartialSpeech(String input) {
@@ -290,7 +281,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         speakBtnLoading.setVisibility(View.INVISIBLE);
         textInput.setText(output);
         output = output.replace(",", "");
-        TextSpeechUtils.speakText(output, speechDoneListener);
+        TextSpeechUtils.speakText(output);
     }
 
     private void expandHighlight() {
@@ -313,28 +304,13 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 .start();
     }
 
-    public void showWaitDialog() {
-//        if (this.waitDialog == null) {
-//            waitDialog = new ProgressDialog(this);
-//            waitDialog.setTitle("Processing...");
-//        }
-//        this.waitDialog.show();
-    }
-
-    public void hideWaitDialog() {
-//        if (this.waitDialog != null && this.waitDialog.isShowing()) {
-//            this.waitDialog.hide();
-//        }
-    }
-
     public void showErrorResponse() {
-        hideWaitDialog();
         speakBtnIcon.setVisibility(View.VISIBLE);
         speakBtnIcon.setImageDrawable(getResources().getDrawable(R.drawable.failure));
         speakBtnLoading.setVisibility(View.INVISIBLE);
         String error = "Some error has occurred while processing your request";
         textInput.setText(error);
-        TextSpeechUtils.speakText(error, speechDoneListener);
+        TextSpeechUtils.speakText(error);
         // String msg = "Some error has occurred while processing your request";
         // if(PrefManager.langEnglish(getApplicationContext()))
         //     TextSpeechUtils.speakText(msg);

@@ -12,9 +12,9 @@ import java.util.Locale;
 
 public class TranslatorUtils {
 
-    public static final String DELOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t" +
+    private static final String DELOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t" +
             "&hl=en&sl=%1$s&tl=en&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=%2$s";
-    public static final String LOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t&" +
+    private static final String LOCALIZE_URL = "http://translate.google.com/translate_a/t?client=t&" +
             "hl=%1$s&sl=en&tl=%1$s&ie=UTF-8&oe=UTF-8&multires=1&oc=1&otf=2&ssel=0&tsel=0&sc=1&q=%2$s";
 
     public static void delocalize(RequestQueue requestQueue, String text,
@@ -65,7 +65,7 @@ public class TranslatorUtils {
         requestQueue.add(req);
     }
 
-    public static boolean isEnglish(String input) {
+    private static boolean isEnglish(String input) {
         boolean isEnglish = true;
         for (char c : input.toCharArray()) {
             if (Character.UnicodeBlock.of(c) != Character.UnicodeBlock.BASIC_LATIN) {
